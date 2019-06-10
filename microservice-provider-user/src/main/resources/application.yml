@@ -1,0 +1,47 @@
+---
+spring:
+  profiles: user1
+server:
+  port: 8000
+---
+spring:
+  profiles: user2
+server:
+  port: 8001
+---
+spring:
+  application:
+    name: microservice-provider-user
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/movie_data
+    username: root
+    password: 1234
+  jpa:
+    database: mysql
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+# 不想将服务注册到Eureka Server
+#  cloud:
+#    service-registry:
+#      auto-registration:
+#        enabled: false
+info:
+  artifactId: @project.artifactId@
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+#将应用注册到Eureka Server集群上
+#     defaultZone: http://peer1:8761/eureka/,http://peer2:8762/eureka/
+    instance:
+      prefer-ip-address: true
+
+#以下配置可用来将微服务注册到需认证的Eureka Server(microservice-discovery-eureka-authenticating)
+#eureka:
+#  client:
+#    service-url:
+#      defaultZone: http://user:123@localhost:8761/eureka/
+#    instance:
+#      prefer-ip-address: true
