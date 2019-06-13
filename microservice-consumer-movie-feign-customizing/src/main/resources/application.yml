@@ -1,0 +1,23 @@
+server:
+  port: 8010
+info:
+  artifactId: @project.artifactId@
+spring:
+  application:
+    name: microservice-consumer-move
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+  instance:
+    prefer-ip-address: true
+#    使用属性配置日志级别
+feign:
+  client:
+    config:
+#      default: 配置所有的FeignClient
+      microservice-consumer-move:
+        loggerLevel: full
+#logging:
+#  level:
+#    com.wpy.cloud.microserviceconsumermovie.config.FeignConfiguration: debug
