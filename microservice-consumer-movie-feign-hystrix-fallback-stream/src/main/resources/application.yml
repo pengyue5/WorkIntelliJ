@@ -1,0 +1,21 @@
+server:
+  port: 8020
+info:
+  artifactId: @project.artifactId@
+spring:
+  application:
+    name: microservice-consumer-move-feign-hystrix-fallback-stream
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+  instance:
+    prefer-ip-address: true
+feign:
+  hystrix:
+    enabled: true
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
