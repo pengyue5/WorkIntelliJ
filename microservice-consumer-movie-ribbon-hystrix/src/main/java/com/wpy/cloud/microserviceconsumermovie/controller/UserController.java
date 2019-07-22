@@ -24,13 +24,15 @@ public class UserController {
 
     //@HystrixCommand的详细讲解：https://github.com/Netflix/Hystrix/tree/master/hystrix-contrib/hystrix-javanica#configuration
     //https://github.com/Netflix/Hystrix/wiki/Configuration
-    @HystrixCommand(fallbackMethod = "findByIdFallback", commandProperties = {
-            @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "5000"),
-            @HystrixProperty(name = "metrics.rollingStats.timeInMilliseconds", value = "10000")
-    }, threadPoolProperties = {
-            @HystrixProperty(name = "coreSize", value = "1"),
-            @HystrixProperty(name = "maxQueueSize", value = "10")
-    })
+    @HystrixCommand(fallbackMethod = "findByIdFallback", ignoreExceptions = {IllegalStateException.class},
+            commandProperties = {
+                    @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "5000"),
+                    @HystrixProperty(name = "metrics.rollingStats.timeInMilliseconds", value = "10000")
+            },
+            threadPoolProperties = {
+                    @HystrixProperty(name = "coreSize", value = "1"),
+                    @HystrixProperty(name = "maxQueueSize", value = "10")
+            })
     @GetMapping("/user/{id}")
     public User findById(@PathVariable Long id) {
         return this.restTemplate.getForObject("http://microservice-provider-user/" + id, User.class);
@@ -43,7 +45,8 @@ public class UserController {
         UserController.LOGGER.info("{}:{}:{}", serviceInstance.getServiceId(), serviceInstance.getHost(), serviceInstance.getPort());
     }
 
-    public User findByIdFallback(Long id) {
+    public User findByIdFallback(Long id, Throwable throwable) {
+        LOGGER.error("进入回退方法，异常：", throwable);
         User user = new User();
         user.setId(-1L);
         user.setName("默认用户");
